@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 
@@ -54,6 +54,8 @@ class Posts(db.Model):
 
 @app.route("/")
 def home():
+    flash("S", "success")
+    flash("Like the video", "warning")
     posts = Posts.query.filter_by().all()
     last = math.ceil(len(posts)/int(params['no_of_posts']))
     page = request.args.get('page')
@@ -177,6 +179,7 @@ def contact():
                           recipients = [params['gmail-user']],
                           body = message + "\n" + phone
                           )
+        flash("Thanks for submitting your details. We will get back to you soon!", "success") 
     return render_template('contact.html', params=params)
 
 
