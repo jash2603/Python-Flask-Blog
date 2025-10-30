@@ -20,12 +20,19 @@
 
  <link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">
  
-    <form class="form-signin" action="/dashboard" method="post">
+    <form class="form-signin" action="/login" method="post">
       {% set fname = 'assets/img/'+  params['login_image']  %}
       <img class="mb-4" src="{{url_for('static', filename=fname)}}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Admin Login</h1>
+      <label for="role" class="sr-only">Role</label>
+        <select class="form-control" id="role" name="role" placeholder="User Role" required autofocus>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="reader">Reader</option>
+          <option value="author">Author</option>
+        </select>
       <label for="uname" class="sr-only">User Name</label>
-      <input type="text" i d="inputEmail" name="uname" class="form-control" placeholder="User Name " required autofocus>
+      <input type="text" id="inputName" name="uname" class="form-control" placeholder="User Name" required>
       <label for="pass" class="sr-only">Password</label>
       <input type="password" id="pass" name = "pass" class="form-control" placeholder="Password" required>
       <div class="checkbox mb-3">

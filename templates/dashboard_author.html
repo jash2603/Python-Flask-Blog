@@ -7,7 +7,7 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
-                    <h1>Admin Panel</h1>
+                    <h1>Author Panel</h1>
                     <span class="subheading">Manage your posts and change them </span>
                 </div>
             </div>
@@ -18,8 +18,10 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-          
+            <h1>Basic Actions</h1>
+            <a href="/edit/0"><button class="btn btn-primary">Add a new post</button></a>
             
+            <hr>
             <h1>Upload a file</h1>
                 <form action="/uploader" method="post" enctype="multipart/form-data">
                     <input type="file" name="file1">
@@ -27,12 +29,12 @@
                 </form> 
             <!-- Todo: Fetch it using for loop from the database-->
              <hr>
-            <h1>Edit Posts</h1>
+            <h1>Edit Your Posts</h1>
             <table class="table">
                 <thead>
                     <tr>
                         <th>Sno</th>
-                        <th>Tite</th>
+                        <th>Title</th>
                         <th>Date</th>
                         <th>Edit</th>
                         <th>Delete</th>

@@ -15,7 +15,11 @@
         "no_of_posts": 3,
         "login_image": "login.svg",
         "admin_user":"harry",
-        "admin_password": "subscribenow",
+        "reader_user":"harry1",
+        "author_user":"harry2",
+        "reader_password":"123456",
+        "admin_password": "1234",
+        "author_password": "12345",
         "upload_location": "C://Users//PIL//Desktop//Flask//static//uploads"
     }
 }

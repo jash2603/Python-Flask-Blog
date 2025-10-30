@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "dashboard_layout.html" %}
 {% block body %}
 
 <!-- Page Header-->
@@ -7,7 +7,7 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
-                    <h1>Admin Panel</h1>
+                    <h1>Edit & Post Panel</h1>
                     <span class="subheading">Manage your posts and change them </span>
                 </div>
             </div>
@@ -18,10 +18,7 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-            <h1>Basic Actions</h1>
-            <a href="/dashboard"><button class="btn btn-primary">Dashboard Home</button></a>
-            <a href="/logout"><button class="btn btn-primary">Logout</button></a>
-            <hr>
+            
             <!-- Todo: Fetch it using for loop from the database-->
             <h1>Add/Edit Posts</h1>
             
@@ -39,6 +36,14 @@
                         <label>Tagline</label>
                         <input type="text" class="form-control" placeholder="Tagline" id="tline" name="tline"
                             required data-validation-required-message="Please enter your email address." value="{{post.tagline}}">
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Author</label>
+                        <input type="text" class="form-control" placeholder="Author" id="author" name="author"
+                            required data-validation-required-message="Please enter your email address." value="{{post.author}}">
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
