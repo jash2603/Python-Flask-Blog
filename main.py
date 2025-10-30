@@ -91,36 +91,42 @@ def about():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-     
+    # If already logged in, redirect based on role
     if 'user' in session:
-        if session['user'] == params['admin_user']:
+        role = session.get('role')
+        if role == 'admin':
             return redirect('/admin_dashboard')
-        elif session['user'] == params['author_user']:
+        elif role == 'author':
             return redirect('/author_dashboard')
-        elif session['user'] == params['reader_user']:
+        elif role == 'reader':
             return redirect('/reader')
 
+    # Handle login submission
     if request.method == "POST":
-        role = request.form.get('role')
         username = request.form.get('uname')
-        userpass = request.form.get('pass')
+        password = request.form.get('pass')
+        role = request.form.get('role')
 
-        if role == 'admin' and username == params['admin_user'] and userpass == params['admin_password']:
-            session['user'] = username
-            session['role'] = 'admin'  # ✅ Set role here
-            return redirect('/admin_dashboard')
+        # Check user in DB
+        user = Users.query.filter_by(username=username, password=password, role=role).first()
 
-        elif role == 'author' and username == params['author_user'] and userpass == params['author_password']:
-            session['user'] = username
-            session['role'] = 'author'  # ✅ Set role here
-            return redirect('/author_dashboard')
+        if user:
+            # ✅ Valid credentials
+            session['user'] = user.username
+            session['role'] = user.role
 
-        elif role == 'reader' and username == params['reader_user'] and userpass == params['reader_password']:
-            session['user'] = username
-            session['role'] = 'reader'  # ✅ Set role here
-            return redirect('/reader')
+            # Redirect by role
+            if user.role == 'admin':
+                return redirect('/admin_dashboard')
+            elif user.role == 'author':
+                return redirect('/author_dashboard')
+            elif user.role == 'reader':
+                return redirect('/reader')
+        else:
+            flash("Invalid username, password, or role!", "danger")
 
     return render_template("login.html", params=params)
+
 
 @app.route("/admin_dashboard", methods=['GET', 'POST']) 
 def admin_dashboard():
