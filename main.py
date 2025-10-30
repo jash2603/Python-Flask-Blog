@@ -210,12 +210,25 @@ def editinfo(sno):
     post = Posts.query.filter_by(sno=sno).first()
     return render_template('edit.html', params=params, sno=sno, post=post)
 
-@app.route("/edit/<string:sno>", methods = ['GET', 'POST'])
+@app.route("/edit/<string:sno>", methods=['GET', 'POST'])
 def edit(sno):
-    if 'user' in session and session['user']==params['admin_user']:
+    if 'user' not in session:
+        return redirect('/login')
+
+    role = session.get('role')
+    username = session.get('user')
+
+    post = Posts.query.filter_by(sno=sno).first()
+
+    if post is None:
+        return f"Post with sno {sno} not found"
+
+    # ✅ Allow admin or post's author only
+    if role == 'admin' or post.author == username:
         return editinfo(sno)
     else:
-        return editinfo(sno)
+        return "❌ Unauthorized: You are not allowed to edit this post!"
+
 
 
 
@@ -244,15 +257,33 @@ def logout():
     session.pop('user')
     return redirect('/') 
 
-@app.route("/delete/<string:sno>", methods = ['GET', 'POST'])
+@app.route("/delete/<string:sno>", methods=['GET', 'POST'])
 def delete(sno):
-    if 'user' in session and session['user']==params['admin_user']:  
-        post = Posts.query.filter_by(sno=sno).first()
-        if post is None:
-            return f"Post with sno {sno} not found"
+    if 'user' not in session:
+        return redirect('/login')
+
+    role = session.get('role')
+    username = session.get('user')
+
+    post = Posts.query.filter_by(sno=sno).first()
+    if post is None:
+        return f"Post with sno {sno} not found"
+
+    # ✅ Only admin or the post's author can delete
+    if role == 'admin' or post.author == username:
         db.session.delete(post)
-        db.session.commit()     
-        return redirect('/dashboard')
+        db.session.commit()
+
+        # Redirect based on role
+        if role == 'admin':
+            return redirect('/admin_dashboard')
+        elif role == 'author':
+            return redirect('/author_dashboard')
+    else:
+        return "❌ Unauthorized: You are not allowed to delete this post!"
+
+    return redirect('/login')
+
 
 @app.route("/contact", methods = ['GET', 'POST'])
 def contact():
