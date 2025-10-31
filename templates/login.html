@@ -2,48 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Coding Thunder | Login</title>
 
-    <title>Admin Panel</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a2e0c6ad9b.js" crossorigin="anonymous"></script>
 
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet" />
+
   </head>
 
-  <body class="text-center">
+  <body>
+    <div class="glow"></div>
 
- <link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">
- 
-    <form class="form-signin" action="/login" method="post">
-      {% set fname = 'assets/img/'+  params['login_image']  %}
-      <img class="mb-4" src="{{url_for('static', filename=fname)}}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Admin Login</h1>
-      <label for="role" class="sr-only">Role</label>
-        <select class="form-control" id="role" name="role" placeholder="User Role" required autofocus>
-          <option value="">Select Role</option>
-          <option value="admin">Admin</option>
-          <option value="reader">Reader</option>
-          <option value="author">Author</option>
-        </select>
-      <label for="uname" class="sr-only">User Name</label>
-      <input type="text" id="inputName" name="uname" class="form-control" placeholder="User Name" required>
-      <label for="pass" class="sr-only">Password</label>
-      <input type="password" id="pass" name = "pass" class="form-control" placeholder="Password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
+    <form class="login-card text-center" action="/login" method="post">
+      {% set fname = 'assets/img/' + params['login_image'] %}
+      <img src="{{ url_for('static', filename=fname) }}" alt="Coding Thunder Logo">
+      <h1>Welcome to <span style="color:#00d4ff;">Coding Thunder ⚡</span></h1>
+
+      <select class="form-select" id="role" name="role" required>
+        <option value="">Select Role</option>
+        <option value="admin">Admin</option>
+        <option value="reader">Reader</option>
+        <option value="author">Author</option>
+      </select>
+
+      <input type="text" id="inputName" name="uname" class="form-control" placeholder="Username" required>
+      <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" required>
+
+      <div class="form-check mb-3 text-start">
+        <input type="checkbox" class="form-check-input" id="remember-me">
+        <label class="form-check-label small" for="remember-me">Remember me</label>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">© {{params['blog_name'] }} 2017-2018</p>
+
+      <button class="btn btn-login" type="submit">
+        <i class="fas fa-bolt me-2"></i> Sign In
+      </button>
+
+      <p class="mt-4 mb-2 text-muted small">© {{ params['blog_name'] }} | 202</p>
     </form>
-
-
- </body>
+  </body>
 </html>

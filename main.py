@@ -52,6 +52,7 @@ class Posts(db.Model):
     date = db.Column(db.String(12), nullable=True)
     img_file = db.Column(db.String(12), nullable=True)  
     author = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 class Users(db.Model):
@@ -63,8 +64,7 @@ class Users(db.Model):
 
 @app.route("/")
 def home():
-    flash("Welcome to Blog Hub", "success")
-    flash("Like the video", "warning")
+    
     posts = Posts.query.filter_by().all()
     last = math.ceil(len(posts)/int(params['no_of_posts']))
     page = request.args.get('page')
@@ -87,7 +87,15 @@ def home():
 
 @app.route("/about")
 def about():
-    return render_template('about.html', params=params)
+    if 'user' in session and session['role']=='author':
+        return render_template('after_login_about_dashboard.html', params=params)
+    elif 'user' in session and session['role']=='reader':
+        return render_template('after_login_about_dashboard.html', params=params)
+        
+    else:     
+        return render_template('about.html', params=params)
+    return render_template('about.html', params=params)   
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -113,6 +121,7 @@ def login():
         if user:
             # ✅ Valid credentials
             session['user'] = user.username
+            session['user_id'] = user.id
             session['role'] = user.role
 
             # Redirect by role
@@ -137,9 +146,9 @@ def author_dashboard():
     if 'user' not in session:
         return redirect('/login')
 
-    author_name = session['user']
-    posts = Posts.query.filter_by(author=author_name).all() 
-    return render_template('dashboard_author.html', params=params, posts=Posts.query.all())
+    user_id = session.get('user_id')
+    posts = Posts.query.filter_by(user_id=user_id).all()         
+    return render_template('dashboard_author.html', params=params, posts=posts)
 
 @app.route("/reader", methods = ['GET', 'POST'])
 def reader():
@@ -162,37 +171,52 @@ def reader():
 
     return render_template("dashboard_reader.html", params=params, posts=posts, prev=prev, next=next)
 
+@app.route("/edit/<string:sno>", methods=['GET', 'POST'])
 def editinfo(sno):
-    if request.method=="POST":
+    if 'user' not in session:
+        return redirect('/login')
+    
+    if request.method == "POST":
         box_title = request.form.get('title')
         tline = request.form.get('tline')
         slug = request.form.get('slug')
         content = request.form.get('content')
         img_file = request.form.get('img_file')
         date = datetime.now()
-        author = request.form.get('author')  
+        author = session.get('user')
+        role = session.get('role')
+        user = Users.query.filter_by(username=author).first()
 
-
-
-        if sno=='0':
-            post = Posts(title=box_title, slug=slug, content=content, tagline=tline, img_file=img_file, date=date, author=author)
-            db.session.add(post)
+        if sno == '0':  
+            # ✅ New post logic
+            new_post = Posts(
+                title=box_title,
+                slug=slug,
+                content=content,
+                tagline=tline,
+                img_file=img_file,
+                date=date,
+                author=author,
+                user_id=user.id  # ✅ store correct user_id
+            )
+            db.session.add(new_post)
             db.session.commit()
+            flash("New post added successfully!", "success")
+
+            # Redirect to author dashboard or admin dashboard
+            if role == 'admin':
+                return redirect('/dashboard')
+            else:
+                return redirect('/author_dashboard')
+
         else:
+            # ✅ Edit existing post logic
             post = Posts.query.filter_by(sno=sno).first()
             if post is None:
                 return f"Post with sno {sno} not found"
 
-            post.title = box_title
-            post.tagline = tline
-            post.slug = slug
-            post.content = content
-            post.img_file = img_file
-            post.date = date
-            db.session.commit()
-
-            # Only allow the same author or admin to edit
-            if post.author == author or session.get('role') == 'admin':
+            # Only allow same author or admin
+            if post.author == author or role == 'admin':
                 post.title = box_title
                 post.tagline = tline
                 post.slug = slug
@@ -200,15 +224,21 @@ def editinfo(sno):
                 post.img_file = img_file
                 post.date = date
                 db.session.commit()
+                flash("Post updated successfully!", "success")
             else:
-                return "Unauthorized action!"
+                return "❌ Unauthorized action!"
 
             return redirect('/edit/' + sno)
-        
-        
 
-    post = Posts.query.filter_by(sno=sno).first()
-    return render_template('edit.html', params=params, sno=sno, post=post)
+    # ✅ GET request (when page first loads)
+    if sno == '0':
+        # Creating new post — no existing data
+        return render_template('edit.html', params=params, sno=sno, post=None)
+    else:
+        post = Posts.query.filter_by(sno=sno).first()
+        return render_template('edit.html', params=params, sno=sno, post=post)
+      
+
 
 @app.route("/edit/<string:sno>", methods=['GET', 'POST'])
 def edit(sno):
@@ -217,7 +247,7 @@ def edit(sno):
 
     role = session.get('role')
     username = session.get('user')
-
+    
     post = Posts.query.filter_by(sno=sno).first()
 
     if post is None:
@@ -254,8 +284,10 @@ def uploader():
         
 @app.route("/logout")
 def logout():
-    session.pop('user')
-    return redirect('/') 
+    session.clear()
+    flash("Logged out successfully!", "info")
+    return redirect('/')
+
 
 @app.route("/delete/<string:sno>", methods=['GET', 'POST'])
 def delete(sno):
@@ -303,7 +335,10 @@ def contact():
                           )
         flash("Thanks for submitting your details. We will get back to you soon!", "success")
     if 'user' in session and session['role']=='author':
-        return render_template('author_contact_dashboard.html', params=params)
+        return render_template('after_login_contact_dashboard.html', params=params)
+    elif 'user' in session and session['role']=='reader':
+        return render_template('after_login_contact_dashboard.html', params=params)
+        
     else:     
         return render_template('contact.html', params=params)
     return render_template('contact.html', params=params)   
