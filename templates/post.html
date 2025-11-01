@@ -1,36 +1,70 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <!-- Page Header -->
-    {% set fname = 'assets/img/' + post.img_file %}
-    <header class="masthead" style="background-image: url('{{ url_for('static', filename=fname) }}')">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="post-heading">
-              <h1>{{post.title}}</h1>
-              <h2 class="subheading">{{post.tagline}}</h2>
-              <span class="meta">Posted by
-                <a href="#">Admin</a>
-                on {{post.date}}</span>
-            </div>
+<!-- ===== Hero / Page Header ===== -->
+{% set fname = 'assets/img/' + post.img_file %}
+<header class="masthead mb-0 text-white" 
+        style="background-image: url('{{ url_for('static', filename=fname) }}');
+               background-size: cover;
+               background-position: center;
+               height: 60vh;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               position: relative;">
+  <div class="overlay position-absolute top-0 start-0 w-100 h-100" 
+       style="background: rgba(0, 0, 0, 0.55);"></div>
+  <div class="container position-relative text-center">
+    <h1 class="display-4 fw-bold">{{post.tagline}}</h1>
+    <p class="lead fst-italic"><span class="meta">Posted by
+                <a href="#">{{ post.author }}</a>
+                on {{post.date}}</span></p>
+  </div>
+</header>
+
+<!-- Post Content -->
+<article>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+
+        <!-- Card for content -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            {{ post.content }}
           </div>
         </div>
-      </div>
-    </header>
 
-    <!-- Post Content -->
-    <article>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            {{post.content}}
+        <!-- Post meta info -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <small class="text-muted">Author: {{ post.author }}</small>
+          <small class="text-muted">Posted on: {{ post.date }}</small>
+        </div>
 
-            
+        <!-- Social sharing buttons -->
+        <div class="mb-5">
+          <span class="fw-bold me-2">Share:</span>
+          <a href="#" class="btn btn-sm btn-outline-primary me-1"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="btn btn-sm btn-outline-info me-1"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="btn btn-sm btn-outline-danger me-1"><i class="fab fa-pinterest"></i></a>
+        </div>
+
+        <!-- Comments Section (optional, UI only) -->
+        <div class="card border-0 shadow-sm mb-5">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Comments</h5>
+            <form>
+              <div class="mb-3">
+                <textarea class="form-control" rows="3" placeholder="Write your comment..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Post Comment</button>
+            </form>
           </div>
         </div>
-      </div>
-    </article>
 
-   {% endblock %}
+      </div>
+    </div>
+  </div>
+</article>
+
+{% endblock %}

@@ -1,61 +1,115 @@
 {% extends "dashboard_layout.html" %}
 {% block body %}
 
-<!-- Page Header-->
-<header class="masthead" style="background-image: url('/static/assets/img/home-bg.jpg');">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <div class="site-heading">
-                    <h1>Admin Panel</h1>
-                    <span class="subheading">Manage your posts and change them </span>
-                </div>
-            </div>
-        </div>
+<!-- ===== Hero / Page Header ===== -->
+<header class="masthead mb-0 text-white" style="background-image: url('/static/assets/img/home-bg.jpg');
+               background-size: cover;
+               background-position: center;
+               height: 60vh;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               position: relative;">
+    <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 0, 0, 0.55);"></div>
+    <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold">Admin Panel</h1>
+        <p class="lead fst-italic"><span class="subheading">Manage your posts and change them</span></p>
     </div>
 </header>
-<!-- Main Content-->
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          
-            
-            <h1>Upload a file</h1>
-                <form action="/uploader" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file1">
-                    <button class="btn btn-primary" type="submit">Upload</button>
-                </form> 
-            <!-- Todo: Fetch it using for loop from the database-->
-             <hr>
-            <h1>Edit Posts</h1>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Sno</th>
-                        <th>Tite</th>
-                        <th>Date</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for post in posts %}
-                    <tr>
-                        <td>{{post.sno}}</td>
-                        <td>{{post.title}}</td>
-                        <td>{{post.date}}</td>
-                        <td><a href="/edit/{{ post.sno }}"><button class="btn btn-primary">Edit</button></a></td>
-                        <td><a href="/delete/{{ post.sno }}"><button class="btn btn-primary">Delete</button></a></td>
-                    </tr>
-                     
-                    {% endfor %}
-                </tbody>
-            </table>
 
+<!-- ===== Main Content ===== -->
+<div class="container my-5 px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
 
-
+      <!-- Upload Section -->
+      <div class="card shadow-sm border-0 rounded-4 mb-5">
+        <div class="card-body p-4">
+          <h3 class="fw-semibold mb-3 text-primary">
+            <i class="fas fa-upload me-2"></i> Upload a File
+          </h3>
+          <form action="/uploader" method="post" enctype="multipart/form-data" class="d-flex flex-column flex-md-row align-items-center gap-3">
+            <input type="file" name="file1" class="form-control" style="max-width: 300px;">
+            <button class="btn btn-primary px-4 py-2 rounded-3 shadow-sm" type="submit">
+              <i class="fas fa-paper-plane me-1"></i> Upload
+            </button>
+          </form>
         </div>
+      </div>
+
+      <!-- Edit Posts Section -->
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="fw-semibold mb-3 text-success">
+            <i class="fas fa-edit me-2"></i> Edit Posts
+          </h3>
+          <div class="table-responsive">
+            <table class="table align-middle table-hover">
+              <thead class="table-dark text-center">
+                <tr>
+                  <th>Sno</th>
+                  <th>Title</th>
+                  <th>Date</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in posts %}
+                <tr class="text-center">
+                  <td>{{post.sno}}</td>
+                  <td class="fw-medium">{{post.title}}</td>
+                  <td>{{post.date}}</td>
+                  <td>
+                    <a href="/edit/{{ post.sno }}">
+                      <button class="btn btn-sm btn-outline-primary rounded-pill px-3 transition">
+                        <i class="fas fa-pen me-1"></i> Edit
+                      </button>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="/delete/{{ post.sno }}">
+                      <button class="btn btn-sm btn-outline-danger rounded-pill px-3 transition">
+                        <i class="fas fa-trash me-1"></i> Delete
+                      </button>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>
+
+<!-- ===== Custom Styling ===== -->
+<style>
+  .card {
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+  }
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  .transition {
+    transition: all 0.2s ease-in-out;
+  }
+  table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: background 0.3s ease;
+  }
+</style>
 
 {% endblock %}

@@ -24,11 +24,6 @@
         font-family: "Poppins", sans-serif;
         background-color: #f9fafc;
         color: #212529;
-         background-image: url('/static/assets/img/home-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
       }
 
       /* ===== Navbar ===== */
@@ -89,9 +84,8 @@
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
   }
   .card {
- background-color: rgba(248, 249, 250, 0.85) !important; /* 0.85 = 85% opaque */
-    transition: all 0.3s ease-in-out;
-    backdrop-filter: blur(5px); /* optional: adds a subtle blur behind */  }
+    transition: all 0.3s ease;
+  }
   .card:hover {
     transform: translateY(-5px);
   }
@@ -119,9 +113,31 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+            {% if session.get('role') == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin_dashboard">Admin Dashboard</a>
+                    </li>
+                    {% elif session.get('role') == 'author' %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/author_dashboard">Author Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/contact">Contact</a>
+                    </li>
+
+                {% elif session.get('role') == 'reader' %}
+                <li class="nav-item">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/contact">Contact</a>
+                    </li>
+                    {% endif %}
+            <li class="nav-item"><a class="nav-link" href="/login">Log Out</a></li>
           </ul>
         </div>
       </div>

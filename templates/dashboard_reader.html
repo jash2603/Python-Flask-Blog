@@ -1,60 +1,64 @@
 {% extends "dashboard_layout.html" %}
+
 {% block body %}
 
-<!-- Page Header-->
-<header class="masthead mb-0" style="background-image: url('/static/assets/img/home-bg.jpg');">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <div class="site-heading">
-                    <h1>Coding Thunder</h1>
-                    <span class="subheading">{{params['tag_line']}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- ===== Hero / Page Header ===== -->
+<header class="masthead mb-0 text-white" 
+        style="background-image: url('/static/assets/img/home-bg.jpg');
+               background-size: cover;
+               background-position: center;
+               height: 60vh;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               position: relative;">
+  <div class="overlay position-absolute top-0 start-0 w-100 h-100" 
+       style="background: rgba(0, 0, 0, 0.55);"></div>
+  <div class="container position-relative text-center">
+    <h1 class="display-4 fw-bold">{{ params['blog_name'] }}</h1>
+    <p class="lead fst-italic">{{ params['tag_line'] }}</p>
+  </div>
 </header>
 
 
 
-<!-- Main Content-->
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
+<!-- ===== Main Blog Content ===== -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
 
-            <!-- Todo: Fetch it using for loop from the database-->
-            <!-- Post preview-->
-            {% for post in posts %}
-            <div class="post-preview">
-                <a href="/post/{{post.slug}}">
-                    <h2 class="post-title">{{ post.title }}
-
-                    </h2>
-                    <h3 class="post-subtitle">
-                        {{post.tagline}}
-                    </h3>
-                </a>
-                <p class="post-meta">Posted by
-                    <a href="#">Admin</a>
-                    on {{post.date}}
-                </p>
-            </div>
-
-            {{post.content[0:143]}}...
-            <hr>
-            </li></a>
-            {% endfor %}
-
-            <!-- Pager-->
-            
-            <div class="d-flex justify-content-between mb-4">
-                <a class="btn btn-primary text-uppercase" href="{{prev}}">&larr; Previous</a>
-                <a class="btn btn-primary text-uppercase" href="{{next}}">Next &rarr;</a>
-            </div>
-
-
+      <!-- Loop through posts -->
+      {% for post in posts %}
+        <div class="card border-0 shadow-sm mb-5 hover-shadow" style="transition: transform 0.3s;">
+          <div class="card-body">
+            <a href="/post/{{ post.slug }}" class="text-decoration-none text-dark">
+              <h2 class="card-title fw-bold mb-2">{{ post.title }}</h2>
+              <h5 class="card-subtitle mb-3 text-muted">{{ post.tagline }}</h5>
+            </a>
+            <p class="text-secondary small mb-3">
+              Posted by <strong>Admin</strong> on {{ post.date }}
+            </p>
+            <p class="card-text text-muted">
+              {{ post.content[0:143] }}...
+            </p>
+            <a href="/post/{{ post.slug }}" class="btn btn-outline-primary btn-sm mt-2">
+              Read More →
+            </a>
+          </div>
         </div>
+      {% endfor %}
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between mt-4">
+        <a class="btn btn-primary text-uppercase px-4" href="{{ prev }}">
+          &larr; Previous
+        </a>
+        <a class="btn btn-primary text-uppercase px-4" href="{{ next }}">
+          Next &rarr;
+        </a>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}

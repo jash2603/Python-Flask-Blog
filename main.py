@@ -271,7 +271,7 @@ def post_route(post_slug):
 
 @app.route("/uploader", methods = ['GET', 'POST'])
 def uploader():
-    if 'user' in session and session['user']==params['admin_user']:
+    if 'user' in session and session['role']=='author':
         if(request.method=='POST'):
             f = request.files['file1']
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename) ))    

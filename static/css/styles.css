@@ -4317,6 +4317,7 @@ textarea.form-control-lg {
   display: flex;
   flex-wrap: wrap;
   padding: var(--bs-breadcrumb-padding-y) var(--bs-breadcrumb-padding-x);
+ 
   margin-bottom: var(--bs-breadcrumb-margin-bottom);
   font-size: var(--bs-breadcrumb-font-size);
   list-style: none;
@@ -10663,6 +10664,7 @@ blockquote {
 }
 
 footer {
+
   padding-top: 3rem;
   padding-bottom: 3rem;
 }

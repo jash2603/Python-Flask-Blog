@@ -1,86 +1,111 @@
 {% extends "dashboard_layout.html" %}
 {% block body %}
 
-<!-- Page Header-->
-<header class="masthead" style="background-image: url('/static/assets/img/home-bg.jpg');">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-                <div class="site-heading">
-                    <h1>Edit & Post Panel</h1>
-                    <span class="subheading">Manage your posts and change them </span>
-                </div>
-            </div>
-        </div>
+<!-- ===== Hero / Page Header ===== -->
+<header class="masthead mb-0 text-white" style="background-image: url('/static/assets/img/home-bg.jpg');
+               background-size: cover;
+               background-position: center;
+               height: 60vh;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               position: relative;">
+    <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 0, 0, 0.55);"></div>
+    <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold">Edit & Post Panel</h1>
+        <p class="lead fst-italic"><span class="subheading">Manage your posts and change them</span></p>
     </div>
 </header>
-<!-- Main Content-->
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            
-            <!-- Todo: Fetch it using for loop from the database-->
-            <h1>Add/Edit Posts</h1>
-            
-            <form name="sentMessage" id="contactForm" action="/edit/{{sno}}" method="post" novalidate>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Title</label>
-                        <input type="text" class="form-control" placeholder="Title" id="title" name='title' required
-                        data-validation-required-message="Please enter your name." value="{{post.title}}">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Tagline</label>
-                        <input type="text" class="form-control" placeholder="Tagline" id="tline" name="tline"
-                            required data-validation-required-message="Please enter your email address." value="{{post.tagline}}">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Author</label>
-                        <input type="text" class="form-control" placeholder="Author" id="author" name="author"
-                            required data-validation-required-message="Please enter your email address." value="{{post.author}}">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <label>Slug</label>
-                        <input type="text" class="form-control" placeholder="slug" name="slug" id="slug"
-                            required data-validation-required-message="Please enter your phone number." value="{{post.slug}}">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Content</label>
-                        <textarea rows="5" class="form-control" placeholder="Content" name="content" id="content"
-                            required data-validation-required-message="Please enter a message.">{{post.content}}</textarea>
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                 <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Image file</label>
-                        <input class="form-control" placeholder="Image filename" name="img_file" id="img_file"
-                             data-validation-required-message="Please enter a message." value="{{post.img_file}}">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <br>
-                <div id="success"></div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" id="sendMessageButton">Submit</button>
-                </div>
-            </form>
 
+<!-- ===== Modern Form Section ===== -->
+<div class="container px-4 px-lg-5 mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      <div class="card shadow-lg border-0 rounded-4 p-4" style="background: rgba(255,255,255,0.95); transition: all 0.4s ease;">
+        <h2 class="text-center fw-bold mb-4 text-primary">Add / Edit Post</h2>
 
-        </div>
+        <form name="sentMessage" id="contactForm" action="/edit/{{sno}}" method="post" novalidate>
+          
+          <!-- Title -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Title</label>
+            <input type="text" class="form-control form-control-lg shadow-sm border-0 rounded-3" 
+                   placeholder="Enter post title" id="title" name="title"
+                   value="{{post.title}}" required
+                   style="transition: box-shadow 0.3s ease;">
+          </div>
+
+          <!-- Tagline -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Tagline</label>
+            <input type="text" class="form-control form-control-lg shadow-sm border-0 rounded-3"
+                   placeholder="Enter tagline" id="tline" name="tline"
+                   value="{{post.tagline}}" required>
+          </div>
+
+          <!-- Author -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Author</label>
+            <input type="text" class="form-control form-control-lg shadow-sm border-0 rounded-3"
+                   placeholder="Enter author name" id="author" name="author"
+                   value="{{post.author}}" required>
+          </div>
+
+          <!-- Slug -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Slug</label>
+            <input type="text" class="form-control form-control-lg shadow-sm border-0 rounded-3"
+                   placeholder="Enter slug" id="slug" name="slug"
+                   value="{{post.slug}}" required>
+          </div>
+
+          <!-- Content -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Content</label>
+            <textarea rows="6" class="form-control form-control-lg shadow-sm border-0 rounded-3"
+                      placeholder="Write your post content here..." id="content" name="content"
+                      required>{{post.content}}</textarea>
+          </div>
+
+          <!-- Image File -->
+          <div class="form-group mb-4">
+            <label class="fw-semibold">Image File</label>
+            <input type="text" class="form-control form-control-lg shadow-sm border-0 rounded-3"
+                   placeholder="Enter image filename" id="img_file" name="img_file"
+                   value="{{post.img_file}}">
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5 py-2 rounded-3 shadow-sm"
+                    id="sendMessageButton"
+                    style="transition: all 0.3s ease;">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
+
+<!-- Smooth Hover Effects -->
+<style>
+  .form-control:focus {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5) !important;
+    outline: none;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  button:hover {
+    background-color: #0d6efd;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(13,110,253,0.4);
+  }
+</style>
 
 {% endblock %}
