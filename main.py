@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+
 from werkzeug.utils import secure_filename
 
 from flask_mail import Mail
@@ -15,6 +17,8 @@ with open('config.json', 'r') as c:
 
 local_server = True   
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+
 app.secret_key = 'super-secret-key'
 app.config['UPLOAD_FOLDER'] = params['upload_location']
 app.config.update(
@@ -94,7 +98,34 @@ def about():
         
     else:     
         return render_template('about.html', params=params)
-    return render_template('about.html', params=params)   
+    return render_template('about.html', params=params)  
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        role = request.form.get('role')
+
+        # ✅ Check if username already exists
+        existing_user = Users.query.filter_by(username=username).first()
+        if existing_user:
+            flash("Username already exists! Please choose another one.", "danger")
+            return redirect('/register')
+
+        # ✅ Hash password
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        # ✅ Create new user entry
+        new_user = Users(username=username, password=hashed_password, role=role)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Registration successful! You can now log in.", "success")
+        return redirect('/login')
+
+    return render_template('register.html', params=params)
+
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -115,16 +146,18 @@ def login():
         password = request.form.get('pass')
         role = request.form.get('role')
 
-        # Check user in DB
-        user = Users.query.filter_by(username=username, password=password, role=role).first()
+        # 🔹 Fetch user by username and role (DON'T compare password directly)
+        user = Users.query.filter_by(username=username, role=role).first()
 
-        if user:
-            # ✅ Valid credentials
+        # 🔹 Verify hashed password using bcrypt
+        if user and bcrypt.check_password_hash(user.password, password):
             session['user'] = user.username
             session['user_id'] = user.id
             session['role'] = user.role
 
-            # Redirect by role
+            flash("Login successful!", "success")
+
+            # Redirect based on role
             if user.role == 'admin':
                 return redirect('/admin_dashboard')
             elif user.role == 'author':
@@ -132,9 +165,11 @@ def login():
             elif user.role == 'reader':
                 return redirect('/reader')
         else:
+            # 🔹 Changed flash message for clarity
             flash("Invalid username, password, or role!", "danger")
 
     return render_template("login.html", params=params)
+
 
 
 @app.route("/admin_dashboard", methods=['GET', 'POST']) 
