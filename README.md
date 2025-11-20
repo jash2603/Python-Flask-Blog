@@ -12,7 +12,7 @@ BlogSphere is a secure, role-based Flask blogging platform built with modern aut
 - Register with username, password, and role (Admin / Author / Reader)
 - Secure password hashing with **Flask-Bcrypt**
 - Role-based dashboard redirection and access control
-- Session-based authentication using Flask sessions
+- Session-based authentication using Flask sessionsz
 
 ---
 
